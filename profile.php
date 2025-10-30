@@ -82,6 +82,20 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$user['id']]);
 $userPosts = $stmt->fetchAll();
+
+// Get user statistics
+$stmt = $pdo->prepare("SELECT COUNT(*) as post_count FROM posts WHERE user_id = ?");
+$stmt->execute([$user['id']]);
+$stats = $stmt->fetch();
+$postCount = $stats['post_count'];
+
+$stmt = $pdo->prepare("SELECT COUNT(*) as message_count FROM messages WHERE sender_id = ?");
+$stmt->execute([$user['id']]);
+$stats = $stmt->fetch();
+$messageCount = $stats['message_count'];
+
+$memberSince = date('F Y', strtotime($user['created_at']));
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -105,6 +119,27 @@ $userPosts = $stmt->fetchAll();
                 <h1 class="profile-name"><?php echo sanitizeOutput($user['username']); ?></h1>
                 <p class="profile-email">Email: <?php echo sanitizeOutput($user['email']); ?></p>
                 </div>
+                </div>
+                <!-- User Statistics -->
+                <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px; padding: 20px; background: var(--bg-light); border-radius: 8px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: var(--primary-color);">
+                            <?php echo $postCount; ?>
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-light);">Posts</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: var(--primary-color);">
+                            <?php echo $messageCount; ?>
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-light);">Messages Sent</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 16px; font-weight: bold; color: var(--primary-color);">
+                            <?php echo $memberSince; ?>
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-light);">Member Since</div>
+                    </div>
                 </div>
                 
                 <?php if ($isOwnProfile): ?>

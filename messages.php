@@ -12,6 +12,10 @@ $errors = [];
 $success = '';
 $currentUserId = getCurrentUserId();
 
+// Mark received messages as read
+$stmt = $pdo->prepare("UPDATE messages SET is_read = 1 WHERE receiver_id = ?");
+$stmt->execute([$currentUserId]);
+
 // Handle message sending
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     $recipientUsername = trim($_POST['recipient'] ?? '');

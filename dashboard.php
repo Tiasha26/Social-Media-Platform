@@ -11,6 +11,35 @@ $pdo = getDBConnection();
 $errors = [];
 $success = '';
 
+// Handle post deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_post'])) {
+    $postId = intval($_POST['post_id'] ?? 0);
+    
+    // Verify post belongs to current user
+    $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ? AND user_id = ?");
+    $stmt->execute([$postId, $userId]);
+    
+    if ($stmt->rowCount() === 1) {
+        $post = $stmt->fetch();
+        
+        // Delete post image if exists
+        if ($post['image'] && file_exists(UPLOAD_PATH . $post['image'])) {
+            unlink(UPLOAD_PATH . $post['image']);
+        }
+        
+        // Delete post
+        $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
+        if ($stmt->execute([$postId])) {
+            $success = "Post deleted successfully!";
+        } else {
+            $errors[] = "Failed to delete post";
+        }
+    } else {
+        $errors[] = "You can only delete your own posts";
+    }
+}
+
+
 // Handle post creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_post'])) {
     $content = trim($_POST['content'] ?? '');
@@ -134,6 +163,17 @@ $posts = $stmt->fetchAll();
                                  alt="Post image" class="post-image">
                         <?php endif; ?>
                         <div class="post-time"><?php echo $post['created_at']; ?></div>
+
+                                              <?php if ($post['user_id'] == getCurrentUserId()): ?>
+                            <form method="POST" action="" style="margin-top: 15px;" 
+                                  onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                                <button type="submit" name="delete_post" class="btn" 
+                                        style="background: var(--error-color); color: white; font-size: 14px; padding: 8px 15px;">
+                                    🗑️ Delete Post
+                                </button>
+                            </form>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

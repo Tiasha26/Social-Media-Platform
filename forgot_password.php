@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // In a real application, you would send an email here
             // For this demo, we'll just show the reset link
-            $resetLink = SITE_URL . "reset_password.php?token=" . $token;
+            $resetLink = SITE_URL . "/reset_password.php?token=" . $token;
             
             $success = "Password reset instructions have been sent! <br><br>
                        <strong>Demo Mode:</strong> Since email is not configured, here's your reset link:<br>

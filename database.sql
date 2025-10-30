@@ -56,9 +56,9 @@ CREATE TABLE IF NOT EXISTS password_resets (
 -- Insert a test user (password: Test@123)
 INSERT INTO users (username, email, password, profile_picture) 
 VALUES (
-    'Joe Rogan',
-    'joe.rogan@gmail.com',
-    'Test@123',
+    'Tiasha',
+    'tiashanaidu22@gmail.com',
+    'Test@1234',
     'uploads/default_avatar.png'
 ), (
     'Cleve',

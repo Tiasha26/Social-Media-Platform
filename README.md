@@ -6,6 +6,8 @@ This is a fully functional social media platform built with PHP, MySQL, HTML5, C
 
 ## 🚀 Features
 
+### Core Features (Required)
+
 - **User Authentication**
   - Secure registration with password hashing
   - Login system with session management
@@ -38,6 +40,59 @@ This is a fully functional social media platform built with PHP, MySQL, HTML5, C
   - Session security
   - File upload validation
 
+### 🎁 BONUS FEATURES (For Extra Marks)
+
+- **Password Reset System** ✅
+  - Forgot password functionality
+  - Secure token generation (64 chars)
+  - Token expiration (1 hour)
+  - One-time use tokens
+
+- **Account Settings Page** ✅
+  - Update email address
+  - Change password
+  - Delete account with confirmation
+  - Password verification for all actions
+
+- **Delete Post Functionality** ✅
+  - Users can delete their own posts
+  - Confirmation dialog
+  - Automatic image cleanup
+  - Permission checking
+
+- **Notification System** ✅
+  - Unread message counter badge
+  - Real-time notification display
+  - Auto-mark messages as read
+  - Visual badge in navbar
+
+- **User Activity Statistics** ✅
+  - Total post count
+  - Total messages sent
+  - Member since date
+  - Displayed on profile page
+
+- **Enhanced UI/UX Features** ✅
+  - Character counters (posts & messages)
+  - Image preview before upload
+  - Loading animations
+  - Confirmation dialogs
+  - Smooth transitions
+
+- **Security Enhancements** ✅
+  - .htaccess security configuration
+  - Directory browsing prevention
+  - Security headers
+  - Hotlink protection
+
+- **Code Quality** ✅
+  - Comprehensive comments
+  - Modular organization
+  - Helper functions
+  - Error handling
+
+**See BONUS_FEATURES_GUIDE.md for detailed documentation!**
+
 ## 📁 Project Structure
 
 ```
@@ -59,11 +114,16 @@ social_media_platform/
 ├── register.php
 ├── login.php
 ├── logout.php
+├── forgot_password.php          # BONUS: Password reset
+├── reset_password.php           # BONUS: Password reset
 ├── dashboard.php
 ├── profile.php
 ├── search.php
 ├── messages.php
-└── README.md
+├── settings.php                 # BONUS: Account settings
+├── .htaccess                    # BONUS: Security config
+├── README.md
+└── BONUS_FEATURES_GUIDE.md      # BONUS: Feature documentation
 ```
 
 ## 🔧 Installation Instructions
@@ -132,7 +192,7 @@ sudo systemctl start mysql
 ```php
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASS', '');  // Change if you have a password
+define('DB_PASS', '');  
 define('DB_NAME', 'social_media_platform');
 ```
 
@@ -164,9 +224,9 @@ chmod 755 uploads
 The database comes with two pre-installed test accounts:
 
 **Account 1:**
-- Username: `Joe Rogan`
-- Email: `joe.rogan@gmail.com`
-- Password: `Test@123`
+- Username: `Tiasha`
+- Email: `tiashanaidu22@gmail.com`
+- Password: `Test@1234`
 
 **Account 2:**
 - Username: `Cleve`
@@ -196,6 +256,20 @@ The database comes with two pre-installed test accounts:
 4. Click "Login"
 5. You'll be redirected to your dashboard
 
+### Forgot Password / Password Reset
+
+1. On the login page, click "Forgot Password?"
+2. Enter your registered email address
+3. Click "Send Reset Link"
+4. **Demo Mode:** Since email is not configured, the reset link will be displayed on screen
+5. Copy and paste the link into your browser
+6. Enter your new password (minimum 6 characters)
+7. Confirm your new password
+8. Click "Reset Password"
+9. You'll be redirected to login with your new password
+
+**Note:** Password reset links expire after 1 hour for security.
+
 ### Creating a Post
 
 1. On the dashboard, find the post creator at the top
@@ -224,7 +298,7 @@ The database comes with two pre-installed test accounts:
 1. Click your avatar in the navigation menu
 2. View your profile information and posts
 3. Click "Edit Profile" to update:
-   - Full Name
+   - Username
    - Profile Picture
 4. Click "Update Profile" to save changes
 

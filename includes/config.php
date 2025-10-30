@@ -11,9 +11,36 @@ define('DB_PASS', '');
 define('DB_NAME', 'social_media_platform');
 
 // Site configuration
-define('SITE_URL', 'http://localhost/social_media_platform');
+define('SITE_URL', 'http://localhost/Social%20Media%20Platform');
 define('UPLOAD_PATH', __DIR__ . '/../uploads/');
-define('UPLOAD_URL', '/Social Media Platform/uploads/'); // Ensure this matches your actual uploads directory
+define('UPLOAD_URL', 'http://localhost/Social%20Media%20Platform/uploads/');
+
+// Create uploads directory if it doesn't exist
+if (!file_exists(UPLOAD_PATH)) {
+    mkdir(UPLOAD_PATH, 0755, true);
+}
+
+// Create default avatar if it doesn't exist
+$defaultAvatar = UPLOAD_PATH . 'default_avatar.png';
+if (!file_exists($defaultAvatar)) {
+    // Create a simple colored square as default avatar
+    $img = imagecreatetruecolor(150, 150);
+    $bgColor = imagecolorallocate($img, 78, 84, 200); // Purple color
+    imagefill($img, 0, 0, $bgColor);
+    
+    // Add text
+    $textColor = imagecolorallocate($img, 255, 255, 255);
+    $text = '?';
+    $font = 5;
+    $textWidth = imagefontwidth($font) * strlen($text);
+    $textHeight = imagefontheight($font);
+    $x = (150 - $textWidth) / 2;
+    $y = (150 - $textHeight) / 2;
+    imagestring($img, $font, $x, $y, $text, $textColor);
+    
+    imagepng($img, $defaultAvatar);
+    imagedestroy($img);
+}
 
 // Session configuration
 ini_set('session.cookie_httponly', 1);
@@ -91,6 +118,30 @@ function requireLogin() {
  */
 function getCurrentUserId() {
     return $_SESSION['user_id'] ?? null;
+}
+
+/**
+ * Get unread message count for current user
+ * @return int Number of unread messages
+ */
+function getUnreadMessageCount() {
+    if (!isLoggedIn()) {
+        return 0;
+    }
+    
+    try {
+        $pdo = getDBConnection();
+        $userId = getCurrentUserId();
+        
+        $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM messages WHERE receiver_id = ? AND is_read = 0");
+        $stmt->execute([$userId]);
+        $result = $stmt->fetch();
+        
+        return (int)$result['count'];
+    } catch (Exception $e) {
+        error_log("Error getting unread message count: " . $e->getMessage());
+        return 0;
+    }
 }
 
 /**
